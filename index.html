@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNSマーケティング用語クイズ</title>
+  <meta name="description" content="Webマーケティング・SNSマーケティングの重要用語をプルダウン穴埋め形式で楽しく学習できるクイズアプリです。">
+  <meta property="og:title" content="SNSマーケティング用語クイズ">
+  <meta property="og:description" content="CPM・CPC・UGCなどSNSマーケティング用語を穴埋めクイズで学ぼう。">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    :root {
+      --accent: #1D9E75;
+      --accent-light: #E1F5EE;
+      --accent-dark: #085041;
+      --bg: #ffffff;
+      --bg2: #f5f5f5;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --text2: #555555;
+      --text3: #888888;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --bg2: #1e1e1e;
+        --border: #2e2e2e;
+        --text: #f0f0f0;
+        --text2: #aaaaaa;
+        --text3: #666666;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    #app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* Header */
+    .hdr { margin-bottom: 1.75rem; }
+    .hdr h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+    .hdr p { font-size: 14px; color: var(--text2); margin-top: 5px; }
+
+    /* Stats */
+    .stats { display: flex; gap: 10px; margin-bottom: 1.25rem; }
+    .stat {
+      background: var(--bg2);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      flex: 1;
+      text-align: center;
+    }
+    .stat-val { font-size: 22px; font-weight: 600; color: var(--text); }
+    .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+    /* Progress */
+    .prog { height: 5px; background: var(--border); border-radius: 3px; margin-bottom: 1.25rem; }
+    .prog-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .4s ease; }
+
+    /* Filter */
+    .fbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; align-items: center; }
+    .fbar-label { font-size: 13px; color: var(--text2); }
+    .fbtn {
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--text2);
+      font-family: inherit;
+      transition: all .15s;
+    }
+    .fbtn:hover { background: var(--bg2); }
+    .fbtn.on { background: var(--accent-light); color: var(--accent-dark); border-color: var(--accent); font-weight: 500; }
+
+    /* Card */
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .sentence {
+      font-size: 16px;
+      line-height: 2.1;
+      color: var(--text);
+    }
+
+    /* Blank selects */
+    .blank-group {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 3px;
+      margin: 0 4px;
+      vertical-align: middle;
+    }
+    .blank-label { font-size: 11px; color: var(--text3); padding-left: 2px; }
+    .bsel {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--bg2);
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      min-width: 130px;
+      font-family: inherit;
+      transition: border-color .15s;
+    }
+    .bsel:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,158,117,.15); }
+    .bsel.ok  { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
+    .bsel.ng  { border-color: #E24B4A; background: #FCEBEB; color: #501313; }
+
+    /* Hint */
+    .hint-row {
+      font-size: 13px;
+      color: var(--text3);
+      margin-top: 12px;
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .hint-row i { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+
+    /* Result */
+    .result-row {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+    .result-row.correct { background: #E1F5EE; color: #085041; border-left: 3px solid #1D9E75; }
+    .result-row.wrong   { background: #FCEBEB; color: #501313; border-left: 3px solid #E24B4A; }
+
+    /* Explanation */
+    .explain-row {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: var(--bg2);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--border);
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+      display: none;
+    }
+
+    /* Action buttons */
+    .actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    .btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      transition: background .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn:hover { background: var(--bg2); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary:hover { background: var(--accent-dark); }
+    .btn:disabled { opacity: .35; cursor: not-allowed; }
+
+    /* Navigation */
+    .nav { display: flex; gap: 10px; align-items: center; margin-top: 1rem; }
+    .nav-info { font-size: 13px; color: var(--text2); margin-left: auto; }
+
+    /* Loading */
+    #loading {
+      text-align: center;
+      padding: 3rem 0;
+      color: var(--text2);
+      font-size: 15px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .sentence { font-size: 15px; line-height: 2; }
+      .bsel { min-width: 110px; font-size: 13px; }
+      .stats { gap: 6px; }
+      .stat-val { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="hdr">
+    <h1>SNSマーケティング 用語クイズ</h1>
+    <p>プルダウンで回答し「回答する」で判定、わからなければ「解説を見る」</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="sc">0</div><div class="stat-lbl">正解</div></div>
+    <div class="stat"><div class="stat-val" id="sw">0</div><div class="stat-lbl">不正解</div></div>
+    <div class="stat"><div class="stat-val" id="sr">-</div><div class="stat-lbl">残り</div></div>
+  </div>
+
+  <div class="prog"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+
+  <div class="fbar">
+    <span class="fbar-label">カテゴリ：</span>
+    <button class="fbtn on"  onclick="fcat('all',this)">すべて</button>
+    <button class="fbtn" onclick="fcat('基本指標',this)">基本指標</button>
+    <button class="fbtn" onclick="fcat('コンテンツ',this)">コンテンツ</button>
+    <button class="fbtn" onclick="fcat('広告',this)">広告</button>
+    <button class="fbtn" onclick="fcat('戦略',this)">戦略</button>
+    <button class="fbtn" onclick="fcat('分析',this)">分析</button>
+  </div>
+
+  <div id="loading">問題を読み込んでいます…</div>
+  <div id="qa" style="display:none"></div>
+
+  <div class="nav" id="nav" style="display:none">
+    <button class="btn" id="bp" onclick="nav(-1)"><i class="ti ti-arrow-left"></i> 前へ</button>
+    <button class="btn" id="bn" onclick="nav(1)">次へ <i class="ti ti-arrow-right"></i></button>
+    <span class="nav-info" id="ni"></span>
+  </div>
+</div>
+
+<script>
+let Q = [];
+let cat = 'all', idx = 0, answered = {}, correct = 0, wrong = 0;
+
+// questions.json を読み込む
+fetch('questions.json')
+  .then(r => r.json())
+  .then(data => {
+    Q = data;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('qa').style.display = 'block';
+    document.getElementById('nav').style.display = 'flex';
+    updateStats();
+    render();
+  })
+  .catch(() => {
+    document.getElementById('loading').textContent = '問題データの読み込みに失敗しました。questions.json が同じフォルダにあるか確認してください。';
+  });
+
+function filtered() {
+  return cat === 'all' ? Q : Q.filter(q => q.cat === cat);
+}
+
+function fcat(c, el) {
+  cat = c; idx = 0;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  render();
+}
+
+function render() {
+  const F = filtered();
+  const q = F[idx];
+  if (!q) return;
+  const ki = Q.indexOf(q);
+  const st = answered[ki];
+  const hasDual = q.abbr !== '';
+
+  let sentHtml = q.sentence;
+  const dis = st ? 'disabled' : '';
+
+  if (hasDual) {
+    const ac = st ? (st === 'correct' ? 'ok' : 'ng') : '';
+    const aSel = `<span class="blank-group">
+      <span class="blank-label">略称</span>
+      <select class="bsel ${ac}" id="sa-${ki}" ${dis}>
+        <option value="">選択</option>
+        ${q.abbr_opts.map(o => `<option value="${o}"${st && o === q.abbr ? ' selected' : ''}>${o}</option>`).join('')}
+      </select></span>`;
+    const fSel = `<span class="blank-group">
+      <span class="blank-label">正式名称</span>
+      <select class="bsel ${ac}" id="sf-${ki}" ${dis}>
+        <option value="">選択</option>
+        ${q.full_opts.map(o => `<option value="${o}"${st && o === q.full ? ' selected' : ''}>${o}</option>`).join('')}
+      </select></span>`;
+    sentHtml = sentHtml.replace('【A】', aSel).replace('【F】', fSel);
+  } else {
+    const fc = st ? (st === 'correct' ? 'ok' : 'ng') : '';
+    const fSel = `<select class="bsel ${fc}" id="sf-${ki}" ${dis}>
+      <option value="">選択してください</option>
+      ${q.full_opts.map(o => `<option value="${o}"${st && o === q.full ? ' selected' : ''}>${o}</option>`).join('')}
+    </select>`;
+    sentHtml = sentHtml.replace('【F】', fSel);
+  }
+
+  let resultHtml = '';
+  if (st === 'correct') {
+    resultHtml = `<div class="result-row correct" style="display:block">✓ 正解！${hasDual ? ` 略称：${q.abbr}　正式名称：${q.full}` : ` 答え：${q.full}`}</div>`;
+  } else if (st === 'wrong') {
+    resultHtml = `<div class="result-row wrong" style="display:block">✗ 不正解。${hasDual ? `正解は 略称：<strong>${q.abbr}</strong>　正式名称：<strong>${q.full}</strong>` : `正解は「<strong>${q.full}</strong>」`}</div>`;
+  }
+
+  document.getElementById('qa').innerHTML = `
+    <div class="card">
+      <div class="badge"><i class="ti ti-tag"></i> ${q.cat}</div>
+      <div class="sentence">${sentHtml}</div>
+      <div class="hint-row"><i class="ti ti-bulb"></i><span>${q.hint}</span></div>
+      ${resultHtml}
+      <div class="explain-row" id="ex-${ki}">
+        ${hasDual ? `略称：<strong>${q.abbr}</strong>（${q.full}）<br>` : ''}${q.explanation}
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="judge(${ki})" ${st ? 'disabled' : ''}>
+          <i class="ti ti-check"></i> 回答する
+        </button>
+        <button class="btn" onclick="toggleExp(${ki})">
+          <i class="ti ti-eye"></i> 解説を見る
+        </button>
+      </div>
+    </div>`;
+
+  document.getElementById('ni').textContent = `${idx + 1} / ${F.length}`;
+  document.getElementById('bp').disabled = idx === 0;
+  document.getElementById('bn').disabled = idx >= F.length - 1;
+  updateStats();
+}
+
+function judge(ki) {
+  if (answered[ki]) return;
+  const q = Q[ki];
+  const fEl = document.getElementById('sf-' + ki);
+  const aEl = document.getElementById('sa-' + ki);
+  const fv = fEl ? fEl.value : '';
+  const av = aEl ? aEl.value : '';
+  if (!fv || (q.abbr && !av)) {
+    alert('すべての空欄を選択してください');
+    return;
+  }
+  const ok = q.abbr ? (fv === q.full && av === q.abbr) : (fv === q.full);
+  answered[ki] = ok ? 'correct' : 'wrong';
+  if (ok) correct++; else wrong++;
+  render();
+}
+
+function toggleExp(ki) {
+  const el = document.getElementById('ex-' + ki);
+  if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function nav(d) {
+  const F = filtered();
+  const n = idx + d;
+  if (n >= 0 && n < F.length) { idx = n; render(); }
+}
+
+function updateStats() {
+  const done = Object.keys(answered).length;
+  document.getElementById('sc').textContent = correct;
+  document.getElementById('sw').textContent = wrong;
+  document.getElementById('sr').textContent = Q.length - done;
+  document.getElementById('pf').style.width = Q.length ? (done / Q.length * 100) + '%' : '0%';
+}
+</script>
+</body>
+</html>
