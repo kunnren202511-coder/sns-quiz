@@ -162,6 +162,9 @@ body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans
     <button class="fbtn" onclick="fcat('広告',this)">広告</button>
     <button class="fbtn" onclick="fcat('戦略',this)">戦略</button>
     <button class="fbtn" onclick="fcat('分析',this)">分析</button>
+    <button class="fbtn" onclick="fcat('広告用語',this)">広告用語</button>
+    <button class="fbtn" onclick="fcat('adnw',this)">adnw</button>
+    <button class="fbtn" onclick="fcat('計算',this)">計算</button>
   </div>
 
   <!-- 正解済みフィルタートグル -->
@@ -407,7 +410,9 @@ function judge(ki){
     wrong++;
     if(!wrongHistory.find(w=>w.ki===ki)) wrongHistory.push({ki,q,yourAbbr:av,yourFull:fv});
   }
-  const allDone=order.every(i=>answered[i]);
+  // 対象問題（orderの中で正解済みスキップを考慮した未回答候補）が全て回答済みなら完了
+  const unanswered=order.filter(i=>!answered[i]);
+  const allDone=unanswered.length===0;
   if(allDone&&!retryMode) setTimeout(()=>showResults(),600);
   render();
 }
@@ -580,12 +585,17 @@ function retryWrongOnly(){
 }
 
 function retryAll(keepScore){
-  if(!keepScore){answered={};correct=0;wrong=0;wrongHistory=[];}
+  if(!keepScore){answered={};correct=0;wrong=0;wrongHistory=[];cat='all';}
   retryMode=false;buildOrder();
   document.getElementById('results-page').style.display='none';
   document.getElementById('quiz-page').style.display='block';
+  // カテゴリボタン: keepScore=trueなら現在のcatを保持、falseなら'all'に戻す
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
-  document.querySelector('.fbtn').classList.add('on');
+  const targetCat=keepScore?cat:'all';
+  const matchBtn=Array.from(document.querySelectorAll('.fbtn')).find(b=>
+    b.textContent.trim()===(targetCat==='all'?'すべて':targetCat)
+  );
+  (matchBtn||document.querySelector('.fbtn')).classList.add('on');
   // トグル初期化
   skipCorrect=true;
   document.getElementById('correct-toggle').classList.add('on');
