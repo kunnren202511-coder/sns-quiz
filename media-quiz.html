@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>媒体別クイズ｜SNSマーケティング学習</title>
+<meta name="description" content="YouTube・Instagram・X・LINE・YDAの媒体特徴と広告フォーマットをクイズ形式で学習できます。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --accent:#1D9E75;--accent-l:#E1F5EE;--accent-d:#085041;
+  --bg:#fff;--bg2:#f5f5f5;--bg3:#ececec;
+  --border:#e0e0e0;--border2:#cacaca;
+  --text:#1a1a1a;--text2:#555;--text3:#888;
+  --r-sm:6px;--r-md:10px;--r-lg:14px;
+  --danger:#E24B4A;--danger-l:#FCEBEB;--danger-d:#501313;
+  /* 媒体カラー */
+  --yt:#FF0000;--yt-l:#FFF0F0;
+  --ig:#E1306C;--ig-l:#FFF0F5;
+  --x:#000000;--x-l:#F5F5F5;
+  --ln:#06C755;--ln-l:#F0FFF4;
+  --yda:#FF0033;--yda-l:#FFF0F2;
+  --cmp:#7B61FF;--cmp-l:#F3F0FF;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#121212;--bg2:#1e1e1e;--bg3:#252525;--border:#2e2e2e;--border2:#3a3a3a;--text:#f0f0f0;--text2:#aaa;--text3:#666;--x-l:#1a1a1a}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+#app{max-width:720px;margin:0 auto;padding:1.5rem 1.25rem 5rem}
+
+/* グローバルナビ */
+.global-nav{display:flex;gap:8px;margin-bottom:1.5rem}
+.gnav-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--r-lg);border:1px solid var(--border);font-size:13px;font-weight:500;text-decoration:none;color:var(--text2);background:var(--bg);transition:all .15s;font-family:inherit}
+.gnav-btn:hover{background:var(--bg2)}
+.gnav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ヘッダー */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1.5rem}
+.hdr-left h1{font-size:19px;font-weight:600}
+.hdr-left p{font-size:13px;color:var(--text2);margin-top:4px}
+.reset-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--r-md);border:1px solid var(--border2);font-size:12px;cursor:pointer;background:var(--bg);color:var(--text2);font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.reset-btn:hover{background:var(--danger-l);border-color:var(--danger);color:var(--danger-d)}
+
+/* Stats */
+.stats{display:flex;gap:8px;margin-bottom:1.25rem}
+.stat{background:var(--bg2);border-radius:var(--r-md);padding:9px 12px;flex:1;text-align:center}
+.stat-val{font-size:20px;font-weight:600}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.prog{height:5px;background:var(--border);border-radius:3px;margin-bottom:1.25rem}
+.prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease}
+
+/* 媒体フィルター */
+.media-filter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+.media-filter-lbl{font-size:12px;color:var(--text2);width:100%}
+.mbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text2);font-family:inherit;transition:all .15s;font-weight:500}
+.mbtn:hover{background:var(--bg2)}
+.mbtn.on{color:#fff}
+.mbtn[data-media="all"].on{background:var(--accent);border-color:var(--accent)}
+.mbtn[data-media="YouTube"].on{background:var(--yt);border-color:var(--yt)}
+.mbtn[data-media="Instagram"].on{background:var(--ig);border-color:var(--ig)}
+.mbtn[data-media="X（Twitter）"].on{background:#333;border-color:#333}
+.mbtn[data-media="LINE"].on{background:var(--ln);border-color:var(--ln)}
+.mbtn[data-media="YDA"].on{background:var(--yda);border-color:var(--yda)}
+.mbtn[data-media="媒体比較"].on{background:var(--cmp);border-color:var(--cmp)}
+
+/* 媒体バッジ */
+.media-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;margin-bottom:4px}
+.media-badge.YouTube{background:var(--yt-l);color:var(--yt)}
+.media-badge.Instagram{background:var(--ig-l);color:var(--ig)}
+.media-badge.X{background:var(--x-l);color:#333;border:1px solid var(--border)}
+.media-badge.LINE{background:var(--ln-l);color:#059142}
+.media-badge.YDA{background:var(--yda-l);color:var(--yda)}
+.media-badge.compare{background:var(--cmp-l);color:var(--cmp)}
+.cat-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:var(--accent-l);color:var(--accent-d);font-weight:500;margin-left:4px}
+
+/* Card */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.badge-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sentence{font-size:15px;line-height:2.1;color:var(--text)}
+
+/* 選択肢（ラジオボタン形式） */
+.options{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.opt-btn{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-md);border:1.5px solid var(--border);font-size:14px;cursor:pointer;background:var(--bg);color:var(--text);font-family:inherit;text-align:left;transition:all .15s;line-height:1.5}
+.opt-btn:hover:not(:disabled){background:var(--bg2);border-color:var(--border2)}
+.opt-btn.selected{border-color:var(--accent);background:var(--accent-l)}
+.opt-btn.correct{border-color:#1D9E75;background:#E1F5EE;color:#085041;font-weight:500}
+.opt-btn.wrong{border-color:#E24B4A;background:#FCEBEB;color:#501313}
+.opt-btn.show-correct{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+.opt-btn:disabled{cursor:default}
+.opt-mark{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.opt-btn.selected .opt-mark{border-color:var(--accent);background:var(--accent);color:#fff}
+.opt-btn.correct .opt-mark,.opt-btn.show-correct .opt-mark{border-color:#1D9E75;background:#1D9E75;color:#fff}
+.opt-btn.wrong .opt-mark{border-color:#E24B4A;background:#E24B4A;color:#fff}
+
+/* Hint / Result / Explain */
+.hint-row{font-size:12px;color:var(--text3);margin-top:10px;display:flex;gap:6px;align-items:flex-start}
+.hint-row i{font-size:14px;margin-top:1px;flex-shrink:0}
+.result-row{margin-top:12px;padding:10px 14px;border-radius:var(--r-md);font-size:13px;line-height:1.8;display:none}
+.result-row.correct{background:#E1F5EE;color:#085041;border-left:3px solid #1D9E75}
+.result-row.wrong{background:#FCEBEB;color:#501313;border-left:3px solid #E24B4A}
+.explain-row{margin-top:8px;padding:10px 14px;background:var(--bg2);border-radius:var(--r-md);border-left:3px solid var(--border2);font-size:13px;color:var(--text2);line-height:1.7;display:none}
+
+/* Actions / Nav */
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:7px 16px;border-radius:var(--r-md);border:1px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text);font-family:inherit;transition:background .15s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--bg2)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-d)}
+.btn.retry-btn{color:var(--accent);border-color:var(--accent)}
+.btn.retry-btn:hover{background:var(--accent-l)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.nav{display:flex;gap:8px;align-items:center;margin-top:.75rem;flex-wrap:wrap}
+.nav-info{font-size:13px;color:var(--text2);margin-left:auto}
+
+/* 正解済みトグル */
+.filter-toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:1.25rem}
+.toggle-track{width:36px;height:20px;border-radius:10px;background:var(--border2);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-track.on{background:var(--accent)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle-track.on .toggle-thumb{left:19px}
+.toggle-label{font-size:12px;color:var(--text2);cursor:pointer;user-select:none}
+
+/* モーダル */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+.modal-box{background:var(--bg);border-radius:var(--r-lg);padding:1.5rem;max-width:340px;width:100%;border:1px solid var(--border)}
+.modal-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.modal-body{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1.25rem}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+
+/* Results */
+#results-page{display:none}
+.results-hero{text-align:center;padding:2rem 0 1.5rem}
+.results-score{font-size:56px;font-weight:700;color:var(--accent)}
+.results-sub{font-size:15px;color:var(--text2);margin-top:6px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:1.5rem 0}
+.results-stat{background:var(--bg2);border-radius:var(--r-md);padding:12px;text-align:center}
+.results-stat-val{font-size:22px;font-weight:600}
+.results-stat-lbl{font-size:12px;color:var(--text2);margin-top:3px}
+.weak-section,.wrong-list-section{margin:1.5rem 0}
+.weak-title{font-size:14px;font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.weak-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg2);border-radius:var(--r-md);margin-bottom:8px}
+.weak-item-left{flex:1}
+.weak-item-cat{font-size:13px;font-weight:500}
+.weak-item-rate{font-size:12px;color:var(--text2);margin-top:2px}
+.weak-bar-wrap{width:100px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-left:12px;flex-shrink:0}
+.weak-bar{height:100%;border-radius:3px;transition:width .5s}
+.wrong-list-item{padding:10px 14px;background:var(--bg2);border-radius:var(--r-md);margin-bottom:8px}
+.wrong-list-item-badge{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.wrong-list-item-q{font-size:13px;line-height:1.5;margin-bottom:4px}
+.wrong-list-item-ans{font-size:12px;color:var(--danger)}
+.results-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+
+/* Accordion */
+.acc-section{margin-top:1.5rem;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.acc-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:var(--bg2);user-select:none}
+.acc-header:hover{background:var(--bg3)}
+.acc-title{font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+.acc-body{display:none;padding:12px 16px}
+.acc-body.open{display:block}
+.acc-chevron{transition:transform .2s;color:var(--text3);font-size:16px}
+.acc-chevron.open{transform:rotate(180deg)}
+.wrong-item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.wrong-item:last-child{border-bottom:none}
+.wrong-item-left{flex:1;min-width:0}
+.wrong-item-q{color:var(--text2);font-size:12px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrong-item-ans{font-size:11px;color:var(--danger);margin-top:2px}
+.retry-small{padding:4px 10px;border-radius:var(--r-sm);border:1px solid var(--accent);font-size:11px;cursor:pointer;background:var(--bg);color:var(--accent);font-family:inherit;white-space:nowrap;flex-shrink:0;transition:background .15s}
+.retry-small:hover{background:var(--accent-l)}
+.empty-msg{font-size:13px;color:var(--text3);text-align:center;padding:12px 0}
+
+#loading{text-align:center;padding:3rem 0;color:var(--text2);font-size:15px}
+@media(max-width:480px){
+  .sentence{font-size:14px;line-height:2}
+  .stats{gap:5px}.stat-val{font-size:17px}
+  .card{padding:1rem}.results-score{font-size:44px}
+  .opt-btn{font-size:13px;padding:9px 12px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div id="quiz-page">
+  <!-- 共通ナビ -->
+  <nav class="global-nav">
+    <a class="gnav-btn" href="index.html"><i class="ti ti-vocabulary"></i> 用語クイズ</a>
+    <a class="gnav-btn active" href="media-quiz.html"><i class="ti ti-device-tv"></i> 媒体クイズ</a>
+  </nav>
+
+  <div class="hdr">
+    <div class="hdr-left">
+      <h1>媒体別クイズ</h1>
+      <p>各SNS・広告媒体の特徴・広告フォーマットを学ぼう</p>
+    </div>
+    <button class="reset-btn" onclick="confirmReset()"><i class="ti ti-refresh" aria-hidden="true"></i>成績リセット</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="sc">0</div><div class="stat-lbl">正解</div></div>
+    <div class="stat"><div class="stat-val" id="sw">0</div><div class="stat-lbl">不正解</div></div>
+    <div class="stat"><div class="stat-val" id="sr">-</div><div class="stat-lbl">残り</div></div>
+    <div class="stat"><div class="stat-val" id="sp">-%</div><div class="stat-lbl">正答率</div></div>
+  </div>
+  <div class="prog"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+
+  <!-- 媒体フィルター -->
+  <div class="media-filter">
+    <span class="media-filter-lbl">媒体で絞り込む：</span>
+    <button class="mbtn on" data-media="all" onclick="fmedia('all',this)">すべて</button>
+    <button class="mbtn" data-media="YouTube" onclick="fmedia('YouTube',this)"><i class="ti ti-brand-youtube"></i> YouTube</button>
+    <button class="mbtn" data-media="Instagram" onclick="fmedia('Instagram',this)"><i class="ti ti-brand-instagram"></i> Instagram</button>
+    <button class="mbtn" data-media="X（Twitter）" onclick="fmedia('X（Twitter）',this)"><i class="ti ti-brand-x"></i> X</button>
+    <button class="mbtn" data-media="LINE" onclick="fmedia('LINE',this)"><i class="ti ti-message-circle"></i> LINE</button>
+    <button class="mbtn" data-media="YDA" onclick="fmedia('YDA',this)"><i class="ti ti-building"></i> YDA</button>
+    <button class="mbtn" data-media="媒体比較" onclick="fmedia('媒体比較',this)"><i class="ti ti-git-compare"></i> 媒体比較</button>
+  </div>
+
+  <!-- 正解済みスキップトグル -->
+  <div class="filter-toggle-row">
+    <div class="toggle-track on" id="correct-toggle" onclick="toggleCorrectFilter()">
+      <div class="toggle-thumb"></div>
+    </div>
+    <span class="toggle-label" onclick="toggleCorrectFilter()" id="toggle-lbl">正解済みの問題をスキップ（ON）</span>
+  </div>
+
+  <div id="loading">問題を読み込んでいます…</div>
+  <div id="qa" style="display:none"></div>
+
+  <div class="nav" id="nav" style="display:none">
+    <button class="btn" id="bp" onclick="navQ(-1)"><i class="ti ti-arrow-left"></i> 前へ</button>
+    <button class="btn" id="bn" onclick="navQ(1)">次へ <i class="ti ti-arrow-right"></i></button>
+    <button class="btn retry-btn" id="brt" onclick="retryWrong()" style="display:none"><i class="ti ti-reload"></i> 再挑戦する？</button>
+    <span class="nav-info" id="ni"></span>
+  </div>
+
+  <!-- 間違えた問題アコーディオン -->
+  <div class="acc-section" id="acc-section" style="display:none">
+    <div class="acc-header" onclick="toggleAcc()">
+      <span class="acc-title"><i class="ti ti-history" style="font-size:16px"></i>間違えた問題
+        <span id="wrong-count-badge" style="font-size:11px;background:var(--danger-l);color:var(--danger-d);padding:2px 8px;border-radius:10px;font-weight:500">0件</span>
+      </span>
+      <i class="ti ti-chevron-down acc-chevron" id="acc-chev"></i>
+    </div>
+    <div class="acc-body" id="acc-body">
+      <div id="wrong-list"><div class="empty-msg">まだ間違えた問題はありません</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Results Page -->
+<div id="results-page">
+  <nav class="global-nav">
+    <a class="gnav-btn" href="index.html"><i class="ti ti-vocabulary"></i> 用語クイズ</a>
+    <a class="gnav-btn active" href="media-quiz.html"><i class="ti ti-device-tv"></i> 媒体クイズ</a>
+  </nav>
+  <div class="results-hero">
+    <div style="font-size:14px;color:var(--text2);margin-bottom:8px">全問回答完了！</div>
+    <div class="results-score" id="res-score">0%</div>
+    <div class="results-sub" id="res-sub"></div>
+  </div>
+  <div class="results-grid">
+    <div class="results-stat"><div class="results-stat-val" id="res-correct">0</div><div class="results-stat-lbl">正解</div></div>
+    <div class="results-stat"><div class="results-stat-val" id="res-wrong">0</div><div class="results-stat-lbl">不正解</div></div>
+    <div class="results-stat"><div class="results-stat-val" id="res-total">0</div><div class="results-stat-lbl">回答数</div></div>
+  </div>
+  <div class="weak-section">
+    <div class="weak-title"><i class="ti ti-chart-bar"></i>媒体別 正答率</div>
+    <div id="weak-cats"></div>
+  </div>
+  <div class="wrong-list-section" id="res-wrong-section">
+    <div class="weak-title"><i class="ti ti-x" style="color:var(--danger)"></i>誤回答した問題</div>
+    <div id="res-wrong-list"></div>
+  </div>
+  <div class="results-actions">
+    <button class="btn primary" onclick="retryWrongOnly()"><i class="ti ti-reload"></i> 誤問題だけに挑戦</button>
+    <button class="btn" onclick="retryAll(false)"><i class="ti ti-refresh"></i> 全問リセットして再挑戦</button>
+    <button class="btn" onclick="retryAll(true)" style="color:var(--text2)"><i class="ti ti-arrow-left"></i> 成績を保持して戻る</button>
+  </div>
+</div>
+
+<!-- スキップ確認モーダル -->
+<div class="modal-overlay" id="skip-modal" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title"><i class="ti ti-alert-circle" style="color:#BA7517"></i> まだ回答していません</div>
+    <div class="modal-body">この問題を回答せずにスキップしますか？</div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()"><i class="ti ti-x"></i> キャンセル</button>
+      <button class="btn" onclick="doSkip()" style="color:#BA7517;border-color:#BA7517"><i class="ti ti-player-skip-forward"></i> スキップ</button>
+      <button class="btn primary" onclick="closeModalAndAnswer()"><i class="ti ti-check"></i> 回答する</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+let Q=[], media='all', order=[], idx=0, answered={}, correct=0, wrong=0;
+let wrongHistory=[], retryMode=false, skipCorrect=true, pendingNavDir=0;
+
+// 媒体アイコンマップ
+const MEDIA_ICON = {
+  'YouTube':'ti-brand-youtube',
+  'Instagram':'ti-brand-instagram',
+  'X（Twitter）':'ti-brand-x',
+  'LINE':'ti-message-circle',
+  'YDA':'ti-building',
+  '媒体比較':'ti-git-compare'
+};
+const MEDIA_CLASS = {
+  'YouTube':'YouTube',
+  'Instagram':'Instagram',
+  'X（Twitter）':'X',
+  'LINE':'LINE',
+  'YDA':'YDA',
+  '媒体比較':'compare'
+};
+
+fetch('media-questions.json')
+  .then(r=>r.json())
+  .then(data=>{
+    Q=data;
+    document.getElementById('loading').style.display='none';
+    document.getElementById('qa').style.display='block';
+    document.getElementById('nav').style.display='flex';
+    buildOrder();
+    updateStats();
+    render();
+  })
+  .catch(()=>{
+    document.getElementById('loading').textContent='media-questions.json の読み込みに失敗しました。';
+  });
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function shuffleOpts(opts, correct){
+  const s=shuffle([...opts]);
+  if(!s.includes(correct)){s[0]=correct;return shuffle(s);}
+  return s;
+}
+
+function buildOrder(overrideIdxes){
+  if(overrideIdxes){order=shuffle(overrideIdxes);}
+  else{
+    const base=media==='all'?Q.map((_,i)=>i):Q.map((_,i)=>i).filter(i=>Q[i].media===media);
+    order=shuffle(base);
+  }
+  idx=0;
+  if(skipCorrect) advanceToUnanswered(1);
+}
+
+function fmedia(m, el){
+  media=m; retryMode=false;
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  buildOrder(); render();
+}
+
+function toggleCorrectFilter(){
+  skipCorrect=!skipCorrect;
+  const track=document.getElementById('correct-toggle');
+  const lbl=document.getElementById('toggle-lbl');
+  track.classList.toggle('on',skipCorrect);
+  lbl.textContent=skipCorrect?'正解済みの問題をスキップ（ON）':'正解済みも表示（OFF）';
+  if(skipCorrect && answered[order[idx]]==='correct') advanceToUnanswered(1);
+  render();
+}
+
+function advanceToUnanswered(dir){
+  if(!skipCorrect) return;
+  let tries=0;
+  while(tries<order.length){
+    if(answered[order[idx]]!=='correct') break;
+    idx=(idx+dir+order.length)%order.length;
+    tries++;
+  }
+}
+
+function render(){
+  if(!order.length){
+    document.getElementById('qa').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text2)">表示できる問題がありません</div>';
+    return;
+  }
+  const ki=order[idx];
+  const q=Q[ki];
+  const st=answered[ki];
+  const opts=st?q.full_opts:shuffleOpts(q.full_opts, q.full);
+  const mClass=MEDIA_CLASS[q.media]||'';
+  const mIcon=MEDIA_ICON[q.media]||'ti-device-tv';
+
+  const optHtml=opts.map(o=>{
+    let cls='opt-btn';
+    let mark='○';
+    if(st){
+      if(o===q.full){cls+=' show-correct';mark='✓';}
+      if(o===answered[ki+'_your_ans'] && o!==q.full){cls+=' wrong';mark='✗';}
+    }
+    return `<button class="${cls}" ${st?'disabled':''} onclick="selectOpt(${ki},'${o.replace(/'/g,"\\'")}')">
+      <span class="opt-mark">${st?(o===q.full?'✓':(o===answered[ki+'_your_ans']?'✗':'')):(answered[ki+'_pending']===o?'●':'')}</span>
+      ${o}
+    </button>`;
+  }).join('');
+
+  let resultHtml='';
+  if(st==='correct'){
+    resultHtml=`<div class="result-row correct" style="display:block">✓ 正解！ 答え：<strong>${q.full}</strong></div>`;
+  } else if(st==='wrong'){
+    resultHtml=`<div class="result-row wrong" style="display:block">
+      ✗ 不正解。<br>
+      <span style="font-size:12px;display:block;margin-top:4px">あなたの回答：<strong>${answered[ki+'_your_ans']||'（未選択）'}</strong></span>
+      <span style="font-size:12px;display:block;margin-top:2px">正しい答え：<strong>${q.full}</strong></span>
+    </div>`;
+  }
+
+  const eid='ex-'+ki;
+  document.getElementById('qa').innerHTML=`
+    <div class="card">
+      <div class="badge-row">
+        <span class="media-badge ${mClass}"><i class="ti ${mIcon}"></i>${q.media}</span>
+        <span class="cat-badge">${q.cat}</span>
+      </div>
+      <div class="sentence">${q.sentence}</div>
+      <div class="options">${optHtml}</div>
+      <div class="hint-row"><i class="ti ti-bulb"></i><span>${q.hint}</span></div>
+      ${resultHtml}
+      <div class="explain-row" id="${eid}">${q.explanation}</div>
+      <div class="actions">
+        <button class="btn primary" onclick="judge(${ki})" ${st?'disabled':''}>
+          <i class="ti ti-check"></i> 回答する
+        </button>
+        <button class="btn" onclick="toggleExp('${eid}')">
+          <i class="ti ti-eye"></i> 解説を見る
+        </button>
+      </div>
+    </div>`;
+
+  const visOrd=skipCorrect?order.filter(i=>answered[i]!=='correct'):order;
+  const visIdx=visOrd.indexOf(ki);
+  document.getElementById('ni').textContent=`${visIdx+1} / ${visOrd.length}${retryMode?' （再挑戦）':''}`;
+  document.getElementById('bp').disabled=idx===0;
+  document.getElementById('bn').disabled=idx>=order.length-1;
+  document.getElementById('brt').style.display=(st==='wrong')?'inline-flex':'none';
+  updateStats();
+  updateWrongAcc();
+}
+
+function selectOpt(ki, val){
+  if(answered[ki]) return;
+  answered[ki+'_pending']=val;
+  render();
+  // ラジオ的に選択状態を更新
+  document.querySelectorAll('.opt-btn').forEach(b=>{
+    b.classList.remove('selected');
+    if(b.textContent.trim()===val) b.classList.add('selected');
+  });
+}
+
+function judge(ki){
+  if(answered[ki]) return;
+  const q=Q[ki];
+  const sel=answered[ki+'_pending']||'';
+  if(!sel){alert('選択肢を選んでください');return;}
+  answered[ki+'_your_ans']=sel;
+  const ok=sel===q.full;
+  answered[ki]=ok?'correct':'wrong';
+  if(ok){correct++;}
+  else{
+    wrong++;
+    if(!wrongHistory.find(w=>w.ki===ki)) wrongHistory.push({ki,q,yourAns:sel});
+  }
+  const unanswered=order.filter(i=>!answered[i]);
+  if(unanswered.length===0 && !retryMode) setTimeout(()=>showResults(),600);
+  render();
+}
+
+function toggleExp(id){
+  const el=document.getElementById(id);
+  if(el) el.style.display=el.style.display==='block'?'none':'block';
+}
+
+function navQ(d){
+  const ki=order[idx];
+  if(!answered[ki] && d>0){
+    pendingNavDir=d;
+    document.getElementById('skip-modal').style.display='flex';
+    return;
+  }
+  moveNav(d);
+}
+function moveNav(d){
+  const n=idx+d;
+  if(n>=0&&n<order.length){
+    idx=n;
+    if(skipCorrect&&d>0) advanceToUnanswered(1);
+    if(skipCorrect&&d<0) advanceToUnanswered(-1);
+    render();
+  }
+}
+function closeModal(){document.getElementById('skip-modal').style.display='none';}
+function closeModalOutside(e){if(e.target===document.getElementById('skip-modal'))closeModal();}
+function doSkip(){closeModal();moveNav(pendingNavDir);}
+function closeModalAndAnswer(){closeModal();window.scrollTo({top:0,behavior:'smooth'});}
+
+function retryWrong(){
+  const ki=order[idx];
+  if(answered[ki]==='wrong'){
+    wrong=Math.max(0,wrong-1);
+    delete answered[ki]; delete answered[ki+'_your_ans']; delete answered[ki+'_pending'];
+    wrongHistory=wrongHistory.filter(w=>w.ki!==ki);
+  }
+  render();
+}
+
+function updateStats(){
+  const doneKeys=Object.keys(answered).filter(k=>!k.includes('_'));
+  document.getElementById('sc').textContent=correct;
+  document.getElementById('sw').textContent=wrong;
+  document.getElementById('sr').textContent=Q.length-doneKeys.length;
+  const total=correct+wrong;
+  document.getElementById('sp').textContent=total>0?Math.round(correct/total*100)+'%':'-%';
+  document.getElementById('pf').style.width=Q.length?(doneKeys.length/Q.length*100)+'%':'0%';
+}
+
+function toggleAcc(){
+  document.getElementById('acc-body').classList.toggle('open');
+  document.getElementById('acc-chev').classList.toggle('open');
+}
+function updateWrongAcc(){
+  const sec=document.getElementById('acc-section');
+  document.getElementById('wrong-count-badge').textContent=wrongHistory.length+'件';
+  if(wrongHistory.length>0){
+    sec.style.display='block';
+    document.getElementById('wrong-list').innerHTML=wrongHistory.map(w=>{
+      const mC=MEDIA_CLASS[w.q.media]||'';
+      return `<div class="wrong-item">
+        <div class="wrong-item-left">
+          <span class="media-badge ${mC}" style="font-size:10px;padding:2px 7px"><i class="ti ${MEDIA_ICON[w.q.media]||'ti-device-tv'}"></i>${w.q.media}</span>
+          <div class="wrong-item-q">${w.q.sentence.replace('【F】','＿＿').substring(0,45)}…</div>
+          <div class="wrong-item-ans">あなたの回答：${w.yourAns}</div>
+        </div>
+        <button class="retry-small" onclick="jumpToQuestion(${w.ki})"><i class="ti ti-reload"></i> 再挑戦</button>
+      </div>`;
+    }).join('');
+  } else {
+    sec.style.display='none';
+  }
+}
+
+function jumpToQuestion(ki){
+  const pos=order.indexOf(ki);
+  if(pos>=0){
+    idx=pos;
+    if(answered[ki]==='wrong'){
+      wrong=Math.max(0,wrong-1);
+      delete answered[ki]; delete answered[ki+'_your_ans']; delete answered[ki+'_pending'];
+      wrongHistory=wrongHistory.filter(w=>w.ki!==ki);
+    }
+    render(); window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function confirmReset(){
+  if(confirm('成績をリセットしますか？')){
+    answered={};correct=0;wrong=0;wrongHistory=[];retryMode=false;
+    buildOrder(); render(); updateWrongAcc();
+    document.getElementById('acc-section').style.display='none';
+  }
+}
+
+function showResults(){
+  document.getElementById('quiz-page').style.display='none';
+  document.getElementById('results-page').style.display='block';
+  const total=correct+wrong;
+  const pct=total>0?Math.round(correct/total*100):0;
+  document.getElementById('res-score').textContent=pct+'%';
+  document.getElementById('res-sub').textContent=`${total}問中 ${correct}問正解`;
+  document.getElementById('res-correct').textContent=correct;
+  document.getElementById('res-wrong').textContent=wrong;
+  document.getElementById('res-total').textContent=total;
+
+  const mediaStats={};
+  order.forEach(ki=>{
+    const m=Q[ki].media;
+    if(!mediaStats[m])mediaStats[m]={c:0,w:0};
+    if(answered[ki]==='correct')mediaStats[m].c++;
+    else if(answered[ki]==='wrong')mediaStats[m].w++;
+  });
+  const sorted=Object.entries(mediaStats).sort((a,b)=>{
+    const ra=a[1].c/(a[1].c+a[1].w)||0;
+    const rb=b[1].c/(b[1].c+b[1].w)||0;
+    return ra-rb;
+  });
+  document.getElementById('weak-cats').innerHTML=sorted.map(([m,s])=>{
+    const t=s.c+s.w; const r=t>0?Math.round(s.c/t*100):0;
+    const col=r>=80?'#1D9E75':r>=50?'#EF9F27':'#E24B4A';
+    return `<div class="weak-item"><div class="weak-item-left"><div class="weak-item-cat">${m}</div><div class="weak-item-rate">${s.c}/${t}問正解（${r}%）${r<60?' ⚠ 要強化':''}</div></div><div class="weak-bar-wrap"><div class="weak-bar" style="width:${r}%;background:${col}"></div></div></div>`;
+  }).join('');
+
+  if(wrongHistory.length>0){
+    document.getElementById('res-wrong-section').style.display='block';
+    document.getElementById('res-wrong-list').innerHTML=wrongHistory.map(w=>{
+      const mC=MEDIA_CLASS[w.q.media]||'';
+      return `<div class="wrong-list-item">
+        <div class="wrong-list-item-badge"><span class="media-badge ${mC}" style="font-size:10px;padding:2px 7px"><i class="ti ${MEDIA_ICON[w.q.media]||'ti-device-tv'}"></i>${w.q.media}</span><span class="cat-badge">${w.q.cat}</span></div>
+        <div class="wrong-list-item-q">${w.q.sentence.replace('【F】','＿＿')}</div>
+        <div class="wrong-list-item-ans">あなたの回答：${w.yourAns} ／ 正解：${w.q.full}</div>
+      </div>`;
+    }).join('');
+  } else {
+    document.getElementById('res-wrong-section').style.display='none';
+  }
+}
+
+function retryWrongOnly(){
+  if(wrongHistory.length===0){alert('間違えた問題がありません');return;}
+  const wi=wrongHistory.map(w=>w.ki);
+  wi.forEach(ki=>{delete answered[ki];delete answered[ki+'_your_ans'];delete answered[ki+'_pending'];});
+  wrong=0; correct=Object.values(answered).filter(v=>v==='correct').length;
+  wrongHistory=[]; retryMode=true;
+  buildOrder(wi);
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('quiz-page').style.display='block';
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelector('.mbtn').classList.add('on');
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryAll(keepScore){
+  if(!keepScore){answered={};correct=0;wrong=0;wrongHistory=[];media='all';}
+  retryMode=false; buildOrder();
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('quiz-page').style.display='block';
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('on'));
+  const target=keepScore?media:'all';
+  const btn=Array.from(document.querySelectorAll('.mbtn')).find(b=>b.dataset.media===target);
+  (btn||document.querySelector('.mbtn')).classList.add('on');
+  skipCorrect=true;
+  document.getElementById('correct-toggle').classList.add('on');
+  document.getElementById('toggle-lbl').textContent='正解済みの問題をスキップ（ON）';
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
