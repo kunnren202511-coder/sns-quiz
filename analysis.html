@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分析思考トレーニング｜SNSマーケティング学習</title>
+<meta name="description" content="SNS・Web広告の数値異変パターン・仮説の立て方・緊急度判断をフローチャートとシナリオクイズで学習できます。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --accent:#1D9E75;--accent-l:#E1F5EE;--accent-d:#085041;
+  --bg:#fff;--bg2:#f5f5f5;--bg3:#ececec;
+  --border:#e0e0e0;--border2:#cacaca;
+  --text:#1a1a1a;--text2:#555;--text3:#888;
+  --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:18px;
+  --red:#E24B4A;--red-l:#FCEBEB;--red-d:#501313;
+  --yellow:#BA7517;--yellow-l:#FAEEDA;--yellow-d:#633806;
+  --green:#1D9E75;--green-l:#E1F5EE;--green-d:#085041;
+  --purple:#7B61FF;--purple-l:#F3F0FF;--purple-d:#3C3489;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#121212;--bg2:#1e1e1e;--bg3:#252525;--border:#2e2e2e;--border2:#3a3a3a;--text:#f0f0f0;--text2:#aaa;--text3:#666}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+#app{max-width:720px;margin:0 auto;padding:1.5rem 1.25rem 5rem}
+
+/* グローバルナビ */
+.global-nav{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.gnav-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-lg);border:1px solid var(--border);font-size:13px;font-weight:500;text-decoration:none;color:var(--text2);background:var(--bg);transition:all .15s}
+.gnav-btn:hover{background:var(--bg2)}
+.gnav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ヘッダー */
+.hdr{margin-bottom:1.5rem}
+.hdr h1{font-size:19px;font-weight:600}
+.hdr p{font-size:13px;color:var(--text2);margin-top:4px}
+
+/* モードタブ */
+.mode-tabs{display:flex;gap:0;margin-bottom:1.5rem;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.mode-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg);color:var(--text2);border:none;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.mode-tab:not(:last-child){border-right:1px solid var(--border)}
+.mode-tab.active{background:var(--accent);color:#fff}
+.mode-tab:hover:not(.active){background:var(--bg2)}
+
+/* フィルターバー */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+.filter-lbl{font-size:12px;color:var(--text2);width:100%}
+.filter-row{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.fbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);color:var(--text2);font-family:inherit;transition:all .15s}
+.fbtn:hover{background:var(--bg2)}
+.fbtn.on{font-weight:500}
+.fbtn.urgency-all.on{background:var(--bg3);color:var(--text);border-color:var(--border2)}
+.fbtn.red.on{background:var(--red-l);color:var(--red-d);border-color:var(--red)}
+.fbtn.yellow.on{background:var(--yellow-l);color:var(--yellow-d);border-color:var(--yellow)}
+.fbtn.green.on{background:var(--green-l);color:var(--green-d);border-color:var(--green)}
+.fbtn.level-all.on,.fbtn.level.on{background:var(--accent-l);color:var(--accent-d);border-color:var(--accent)}
+
+/* シナリオカード一覧 */
+.scenario-list{display:flex;flex-direction:column;gap:10px}
+.scenario-card{border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.25rem;cursor:pointer;transition:all .2s;background:var(--bg)}
+.scenario-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(29,158,117,.1)}
+.scenario-card.done{opacity:.7}
+.sc-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.urgency-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600}
+.urgency-badge.red{background:var(--red-l);color:var(--red-d)}
+.urgency-badge.yellow{background:var(--yellow-l);color:var(--yellow-d)}
+.urgency-badge.green{background:var(--green-l);color:var(--green-d)}
+.level-badge{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--purple-l);color:var(--purple-d);font-weight:500}
+.cat-badge{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--accent-l);color:var(--accent-d);font-weight:500}
+.done-badge{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--green-l);color:var(--green-d);font-weight:500}
+.sc-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sc-summary{font-size:13px;color:var(--text2);line-height:1.6}
+.sc-arrow{margin-left:auto;color:var(--text3);font-size:18px;flex-shrink:0}
+
+/* 詳細ページ */
+#detail-page{display:none}
+.back-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--r-md);border:1px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text2);font-family:inherit;margin-bottom:1.25rem;transition:background .15s}
+.back-btn:hover{background:var(--bg2)}
+.detail-hdr{margin-bottom:1.5rem}
+.detail-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.detail-title{font-size:18px;font-weight:600;margin-bottom:6px}
+.detail-summary{font-size:13px;color:var(--text2);line-height:1.6;padding:10px 14px;background:var(--bg2);border-radius:var(--r-md);border-left:3px solid var(--accent)}
+
+/* サブタブ（フロー/クイズ） */
+.sub-tabs{display:flex;gap:0;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.sub-tab{flex:1;padding:9px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg);color:var(--text2);border:none;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.sub-tab:not(:last-child){border-right:1px solid var(--border)}
+.sub-tab.active{background:var(--accent);color:#fff}
+.sub-tab:hover:not(.active){background:var(--bg2)}
+
+/* フローチャート */
+.flow-wrap{display:flex;flex-direction:column;gap:12px}
+.flow-node{border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.25rem;background:var(--bg)}
+.flow-question{font-size:15px;font-weight:500;color:var(--text);margin-bottom:12px;display:flex;gap:8px;align-items:flex-start}
+.flow-question i{font-size:18px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.flow-opts{display:flex;flex-direction:column;gap:8px}
+.flow-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--r-md);border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text);font-family:inherit;text-align:left;transition:all .15s;line-height:1.5}
+.flow-opt:hover{background:var(--bg2);border-color:var(--border2)}
+.flow-opt-mark{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px}
+.feedback-node{border-radius:var(--r-lg);padding:1rem 1.25rem;font-size:14px;line-height:1.7}
+.feedback-node.wrong{background:var(--red-l);color:var(--red-d);border:1px solid var(--red)}
+.feedback-node.correct{background:var(--green-l);color:var(--green-d);border:1px solid var(--green)}
+.feedback-node.wrong .retry-link{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:6px 12px;border-radius:var(--r-md);border:1px solid var(--red);font-size:12px;cursor:pointer;background:var(--bg);color:var(--red-d);font-family:inherit}
+.flow-connector{text-align:center;color:var(--text3);font-size:18px;margin:-4px 0}
+.flow-reset-btn{display:inline-flex;align-items:center;gap:5px;margin-top:1rem;padding:8px 16px;border-radius:var(--r-md);border:1px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text2);font-family:inherit;transition:background .15s}
+.flow-reset-btn:hover{background:var(--bg2)}
+
+/* シナリオクイズ */
+.sq-card{border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.sq-num{font-size:11px;color:var(--text3);margin-bottom:6px}
+.sq-q{font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;line-height:1.6}
+.sq-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.sq-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--r-md);border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text);font-family:inherit;text-align:left;transition:all .15s;line-height:1.5}
+.sq-opt:hover:not(:disabled){background:var(--bg2);border-color:var(--border2)}
+.sq-opt.selected{border-color:var(--accent);background:var(--accent-l)}
+.sq-opt.correct{border-color:var(--green);background:var(--green-l);color:var(--green-d);font-weight:500}
+.sq-opt.wrong{border-color:var(--red);background:var(--red-l);color:var(--red-d)}
+.sq-opt.show-correct{border-color:var(--green);background:var(--green-l);color:var(--green-d)}
+.sq-opt:disabled{cursor:default}
+.sq-opt-mark{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px}
+.sq-opt.selected .sq-opt-mark{border-color:var(--accent);background:var(--accent);color:#fff}
+.sq-opt.correct .sq-opt-mark,.sq-opt.show-correct .sq-opt-mark{border-color:var(--green);background:var(--green);color:#fff}
+.sq-opt.wrong .sq-opt-mark{border-color:var(--red);background:var(--red);color:#fff}
+.sq-result{padding:10px 14px;border-radius:var(--r-md);font-size:13px;line-height:1.7;margin-bottom:10px;display:none}
+.sq-result.correct{background:var(--green-l);color:var(--green-d);border-left:3px solid var(--green)}
+.sq-result.wrong{background:var(--red-l);color:var(--red-d);border-left:3px solid var(--red)}
+.sq-explain{padding:10px 14px;background:var(--bg2);border-radius:var(--r-md);border-left:3px solid var(--border2);font-size:13px;color:var(--text2);line-height:1.7;display:none}
+.sq-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Tips */
+.tips-section{margin-top:1.5rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:var(--r-lg);border:1px solid var(--border)}
+.tips-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.tip-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:6px}
+.tip-item:last-child{margin-bottom:0}
+.tip-item i{font-size:14px;color:var(--accent);flex-shrink:0;margin-top:2px}
+
+/* Quiz score */
+.sq-score{text-align:center;padding:1.5rem;background:var(--bg2);border-radius:var(--r-lg);margin-top:1rem}
+.sq-score-val{font-size:44px;font-weight:700;color:var(--accent)}
+.sq-score-lbl{font-size:14px;color:var(--text2);margin-top:4px}
+
+/* ボタン共通 */
+.btn{padding:7px 16px;border-radius:var(--r-md);border:1px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg);color:var(--text);font-family:inherit;transition:background .15s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--bg2)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-d)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+#loading{text-align:center;padding:3rem 0;color:var(--text2)}
+.empty{text-align:center;padding:2rem;color:var(--text3);font-size:14px}
+
+@media(max-width:480px){
+  .mode-tab{font-size:12px;padding:9px 6px}
+  .flow-opt,.sq-opt{font-size:12px}
+  .detail-title{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- 一覧ページ -->
+<div id="list-page">
+  <nav class="global-nav">
+    <a class="gnav-btn" href="index.html"><i class="ti ti-vocabulary"></i> 用語クイズ</a>
+    <a class="gnav-btn" href="media-quiz.html"><i class="ti ti-device-tv"></i> 媒体クイズ</a>
+    <a class="gnav-btn active" href="analysis.html"><i class="ti ti-brain"></i> 分析思考</a>
+  </nav>
+
+  <div class="hdr">
+    <h1>分析思考トレーニング</h1>
+    <p>数値の異変パターン・仮説の立て方・緊急度判断をフローチャートとクイズで学ぼう</p>
+  </div>
+
+  <!-- モードタブ -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('flow',this)">
+      <i class="ti ti-git-branch"></i> フローチャート診断
+    </button>
+    <button class="mode-tab" onclick="setMode('quiz',this)">
+      <i class="ti ti-help-circle"></i> シナリオクイズ
+    </button>
+  </div>
+
+  <!-- フィルター -->
+  <div class="filter-bar">
+    <span class="filter-lbl">緊急度：</span>
+    <div class="filter-row">
+      <button class="fbtn urgency-all on" onclick="setUrgency('all',this)">すべて</button>
+      <button class="fbtn red" onclick="setUrgency('red',this)">🔴 緊急対応</button>
+      <button class="fbtn yellow" onclick="setUrgency('yellow',this)">🟡 早期対応</button>
+      <button class="fbtn green" onclick="setUrgency('green',this)">🟢 様子見</button>
+    </div>
+    <span class="filter-lbl" style="margin-top:6px">難易度：</span>
+    <div class="filter-row">
+      <button class="fbtn level-all on" onclick="setLevel('all',this)">すべて</button>
+      <button class="fbtn level" onclick="setLevel('beginner',this)">初学者</button>
+      <button class="fbtn level" onclick="setLevel('intermediate',this)">中級者</button>
+      <button class="fbtn level" onclick="setLevel('advanced',this)">実務者</button>
+    </div>
+  </div>
+
+  <div id="loading">データを読み込んでいます…</div>
+  <div id="scenario-list" class="scenario-list"></div>
+</div>
+
+<!-- 詳細ページ -->
+<div id="detail-page">
+  <nav class="global-nav">
+    <a class="gnav-btn" href="index.html"><i class="ti ti-vocabulary"></i> 用語クイズ</a>
+    <a class="gnav-btn" href="media-quiz.html"><i class="ti ti-device-tv"></i> 媒体クイズ</a>
+    <a class="gnav-btn active" href="analysis.html"><i class="ti ti-brain"></i> 分析思考</a>
+  </nav>
+  <button class="back-btn" onclick="showList()"><i class="ti ti-arrow-left"></i> 一覧に戻る</button>
+  <div class="detail-hdr">
+    <div class="detail-badges" id="detail-badges"></div>
+    <div class="detail-title" id="detail-title"></div>
+    <div class="detail-summary" id="detail-summary"></div>
+  </div>
+  <div class="sub-tabs">
+    <button class="sub-tab active" id="sub-flow" onclick="setSubTab('flow',this)">
+      <i class="ti ti-git-branch"></i> フローチャート診断
+    </button>
+    <button class="sub-tab" id="sub-quiz" onclick="setSubTab('quiz',this)">
+      <i class="ti ti-help-circle"></i> シナリオクイズ
+    </button>
+  </div>
+  <div id="flow-area"></div>
+  <div id="quiz-area" style="display:none"></div>
+  <div class="tips-section" id="tips-section" style="display:none">
+    <div class="tips-title"><i class="ti ti-bulb"></i> まとめ・実務ポイント</div>
+    <div id="tips-list"></div>
+  </div>
+</div>
+
+</div>
+<script>
+let scenarios=[], urgencyFilter='all', levelFilter='all', currentMode='flow';
+let currentScenario=null, flowState={}, quizState={};
+const doneScenarios=new Set();
+
+const URGENCY_LABEL={'red':'🔴 緊急対応','yellow':'🟡 早期対応','green':'🟢 様子見'};
+const LEVEL_LABEL={'beginner':'初学者','intermediate':'中級者','advanced':'実務者'};
+
+fetch('analysis-data.json')
+  .then(r=>r.json())
+  .then(d=>{
+    scenarios=d.scenarios;
+    document.getElementById('loading').style.display='none';
+    renderList();
+  })
+  .catch(()=>{
+    document.getElementById('loading').textContent='analysis-data.json の読み込みに失敗しました。';
+  });
+
+// ─── フィルター ───
+function setMode(m, el){
+  currentMode=m;
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+function setUrgency(u, el){
+  urgencyFilter=u;
+  document.querySelectorAll('.fbtn.urgency-all,.fbtn.red,.fbtn.yellow,.fbtn.green').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderList();
+}
+function setLevel(l, el){
+  levelFilter=l;
+  document.querySelectorAll('.fbtn.level-all,.fbtn.level').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderList();
+}
+
+// ─── 一覧レンダリング ───
+function renderList(){
+  const filtered=scenarios.filter(s=>{
+    if(urgencyFilter!=='all' && s.urgency!==urgencyFilter) return false;
+    if(levelFilter!=='all' && s.level!==levelFilter) return false;
+    return true;
+  });
+  const el=document.getElementById('scenario-list');
+  if(!filtered.length){
+    el.innerHTML='<div class="empty">条件に一致するシナリオがありません</div>';
+    return;
+  }
+  el.innerHTML=filtered.map(s=>`
+    <div class="scenario-card${doneScenarios.has(s.id)?' done':''}" onclick="openScenario('${s.id}')">
+      <div class="sc-top">
+        <span class="urgency-badge ${s.urgency}">${URGENCY_LABEL[s.urgency]}</span>
+        <span class="level-badge">${LEVEL_LABEL[s.level]}</span>
+        <span class="cat-badge">${s.category}</span>
+        ${doneScenarios.has(s.id)?'<span class="done-badge">✓ 完了</span>':''}
+      </div>
+      <div class="sc-title">${s.title}</div>
+      <div class="sc-summary">${s.summary}</div>
+    </div>
+  `).join('');
+}
+
+// ─── 詳細ページを開く ───
+function openScenario(id){
+  currentScenario=scenarios.find(s=>s.id===id);
+  if(!currentScenario) return;
+  flowState={history:[], currentId: currentScenario.flow[0].id};
+  quizState={answers:{}, correct:0, wrong:0, pending:{}};
+  document.getElementById('list-page').style.display='none';
+  document.getElementById('detail-page').style.display='block';
+
+  // バッジ・タイトル・サマリー
+  document.getElementById('detail-badges').innerHTML=`
+    <span class="urgency-badge ${currentScenario.urgency}">${URGENCY_LABEL[currentScenario.urgency]}</span>
+    <span class="level-badge">${LEVEL_LABEL[currentScenario.level]}</span>
+    <span class="cat-badge">${currentScenario.category}</span>`;
+  document.getElementById('detail-title').textContent=currentScenario.title;
+  document.getElementById('detail-summary').textContent=currentScenario.summary;
+
+  // サブタブ：一覧のモードに合わせて初期タブを決める
+  const initTab = currentMode==='quiz' ? 'quiz' : 'flow';
+  document.getElementById('sub-flow').classList.toggle('active', initTab==='flow');
+  document.getElementById('sub-quiz').classList.toggle('active', initTab==='quiz');
+  document.getElementById('flow-area').style.display=initTab==='flow'?'block':'none';
+  document.getElementById('quiz-area').style.display=initTab==='quiz'?'block':'none';
+
+  renderFlow();
+  renderQuiz();
+  renderTips();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showList(){
+  document.getElementById('detail-page').style.display='none';
+  document.getElementById('list-page').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function setSubTab(tab, el){
+  document.querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('flow-area').style.display=tab==='flow'?'block':'none';
+  document.getElementById('quiz-area').style.display=tab==='quiz'?'block':'none';
+  document.getElementById('tips-section').style.display='block';
+}
+
+// ─── フローチャート ───
+function getFlowNode(id){
+  return currentScenario.flow.find(n=>n.id===id);
+}
+
+function renderFlow(){
+  const area=document.getElementById('flow-area');
+  const history=flowState.history;
+  const curId=flowState.currentId;
+  let html='<div class="flow-wrap">';
+
+  // 履歴ノード（既に選択済み）
+  history.forEach((h,i)=>{
+    const node=getFlowNode(h.nodeId);
+    if(!node) return;
+    if(node.type==='wrong'||node.type==='correct') return;
+    html+=`<div class="flow-node" style="opacity:.7">
+      <div class="flow-question"><i class="ti ti-help-circle"></i><span>${node.question}</span></div>
+      <div class="flow-opts">
+        <div class="flow-opt" style="border-color:var(--accent);background:var(--accent-l);cursor:default">
+          <span class="flow-opt-mark" style="border-color:var(--accent);background:var(--accent);color:#fff">✓</span>
+          ${h.chosen}
+        </div>
+      </div>
+    </div>`;
+    // フィードバックノードがあれば表示
+    if(h.feedbackId){
+      const fb=getFlowNode(h.feedbackId);
+      if(fb && fb.type==='wrong'){
+        html+=`<div class="feedback-node wrong"><i class="ti ti-alert-circle"></i> ${fb.message}</div>`;
+      }
+    }
+    if(i<history.length-1) html+=`<div class="flow-connector"><i class="ti ti-arrow-down"></i></div>`;
+  });
+
+  if(history.length>0) html+=`<div class="flow-connector"><i class="ti ti-arrow-down"></i></div>`;
+
+  // 現在のノード
+  const cur=getFlowNode(curId);
+  if(cur){
+    if(cur.type==='correct'){
+      html+=`<div class="feedback-node correct">
+        <i class="ti ti-circle-check"></i> ${cur.message}
+      </div>
+      <button class="flow-reset-btn" onclick="resetFlow()"><i class="ti ti-refresh"></i> もう一度挑戦する</button>`;
+      doneScenarios.add(currentScenario.id);
+      renderTips();
+    } else if(cur.type==='wrong'){
+      html+=`<div class="feedback-node wrong">
+        <i class="ti ti-alert-circle"></i> ${cur.message}
+        <br><button class="retry-link" onclick="retryFromWrong()"><i class="ti ti-arrow-back"></i> 前の質問に戻る</button>
+      </div>`;
+    } else {
+      html+=`<div class="flow-node">
+        <div class="flow-question"><i class="ti ti-help-circle"></i><span>${cur.question}</span></div>
+        <div class="flow-opts">
+          ${cur.options.map(o=>`
+            <button class="flow-opt" onclick="chooseFlow('${o.next}','${o.label.replace(/'/g,"\\'")}')">
+              <span class="flow-opt-mark">→</span>${o.label}
+            </button>`).join('')}
+        </div>
+      </div>`;
+    }
+  }
+
+  html+='</div>';
+  area.innerHTML=html;
+}
+
+function chooseFlow(nextId, label){
+  const cur=getFlowNode(flowState.currentId);
+  const nextNode=getFlowNode(nextId);
+  // wrongノードへ行く場合はfeedbackとして記録して同じ質問に戻す
+  if(nextNode && nextNode.type==='wrong'){
+    flowState.history.push({nodeId:flowState.currentId, chosen:label, feedbackId:nextId});
+    flowState.currentId=nextNode.next; // wrongノードのnextで元の質問IDへ
+  } else {
+    flowState.history.push({nodeId:flowState.currentId, chosen:label, feedbackId:null});
+    flowState.currentId=nextId;
+  }
+  renderFlow();
+  // スムーズスクロール
+  setTimeout(()=>{
+    const area=document.getElementById('flow-area');
+    area.lastElementChild && area.lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
+}
+
+function resetFlow(){
+  flowState={history:[], currentId: currentScenario.flow[0].id};
+  renderFlow();
+}
+
+function retryFromWrong(){
+  // 最後の履歴を削除して前の質問に戻す
+  if(flowState.history.length>0){
+    const last=flowState.history.pop();
+    flowState.currentId=last.nodeId;
+  }
+  renderFlow();
+}
+
+// ─── シナリオクイズ ───
+function renderQuiz(){
+  const area=document.getElementById('quiz-area');
+  const qs=currentScenario.quiz;
+  let html='';
+  qs.forEach((q,qi)=>{
+    const st=quizState.answers[qi];
+    const pending=quizState.pending[qi]||'';
+    const shuffledOpts=st?q.options:[...q.options].sort(()=>Math.random()-.5);
+    html+=`<div class="sq-card">
+      <div class="sq-num">問${qi+1} / ${qs.length}</div>
+      <div class="sq-q">${q.question}</div>
+      <div class="sq-opts">
+        ${shuffledOpts.map(o=>{
+          let cls='sq-opt';
+          let mark='';
+          if(st){
+            if(o===q.answer){cls+=' show-correct';mark='✓';}
+            else if(o===st && o!==q.answer){cls+=' wrong';mark='✗';}
+          } else if(o===pending){cls+=' selected';mark='●';}
+          return `<button class="${cls}" ${st?'disabled':''} onclick="selectQuizOpt(${qi},'${o.replace(/'/g,"\\'")}')">
+            <span class="sq-opt-mark">${mark}</span>${o}
+          </button>`;
+        }).join('')}
+      </div>
+      ${st?`<div class="sq-result ${st===q.answer?'correct':'wrong'}" style="display:block">
+        ${st===q.answer?'✓ 正解！':'✗ 不正解。正解は「'+q.answer+'」'}
+      </div>
+      <div class="sq-explain" id="sqexp-${qi}" style="display:block">${q.explanation}</div>`:''}
+      <div class="sq-actions">
+        <button class="btn primary" onclick="judgeQuiz(${qi})" ${st?'disabled':''}>
+          <i class="ti ti-check"></i> 回答する
+        </button>
+        <button class="btn" onclick="toggleExp('sqexp-${qi}')">
+          <i class="ti ti-eye"></i> 解説を見る
+        </button>
+      </div>
+    </div>`;
+  });
+
+  // スコア表示
+  const answered=Object.keys(quizState.answers).length;
+  if(answered===qs.length){
+    const pct=Math.round(quizState.correct/qs.length*100);
+    html+=`<div class="sq-score">
+      <div class="sq-score-val">${pct}%</div>
+      <div class="sq-score-lbl">${qs.length}問中 ${quizState.correct}問正解</div>
+      <button class="btn" style="margin-top:12px" onclick="resetQuiz()"><i class="ti ti-refresh"></i> もう一度</button>
+    </div>`;
+    doneScenarios.add(currentScenario.id);
+  }
+  area.innerHTML=html;
+}
+
+function selectQuizOpt(qi, val){
+  if(quizState.answers[qi]) return;
+  quizState.pending[qi]=val;
+  renderQuiz();
+}
+
+function judgeQuiz(qi){
+  if(quizState.answers[qi]) return;
+  const q=currentScenario.quiz[qi];
+  const sel=quizState.pending[qi]||'';
+  if(!sel){alert('選択肢を選んでください');return;}
+  quizState.answers[qi]=sel;
+  if(sel===q.answer) quizState.correct++;
+  else quizState.wrong++;
+  renderQuiz();
+}
+
+function resetQuiz(){
+  quizState={answers:{},correct:0,wrong:0,pending:{}};
+  renderQuiz();
+}
+
+function toggleExp(id){
+  const el=document.getElementById(id);
+  if(el) el.style.display=el.style.display==='block'?'none':'block';
+}
+
+// ─── Tips ───
+function renderTips(){
+  const sec=document.getElementById('tips-section');
+  const list=document.getElementById('tips-list');
+  if(!currentScenario || !currentScenario.tips){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=currentScenario.tips.map(t=>`
+    <div class="tip-item"><i class="ti ti-point-filled"></i><span>${t}</span></div>
+  `).join('');
+}
+</script>
+</body>
+</html>
