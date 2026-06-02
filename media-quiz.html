@@ -399,7 +399,7 @@ function render(){
       if(o===q.full){cls+=' show-correct';mark='✓';}
       if(o===answered[ki+'_your_ans'] && o!==q.full){cls+=' wrong';mark='✗';}
     }
-    return `<button class="${cls}" ${st?'disabled':''} onclick="selectOpt(${ki},'${o.replace(/'/g,"\\'")}')">
+    return `<button class="${cls}" ${st?'disabled':''} data-val="${o}" onclick="selectOpt(${ki},'${o.replace(/'/g,"\\'")}')">
       <span class="opt-mark">${st?(o===q.full?'✓':(o===answered[ki+'_your_ans']?'✗':'')):(answered[ki+'_pending']===o?'●':'')}</span>
       ${o}
     </button>`;
@@ -451,11 +451,16 @@ function render(){
 function selectOpt(ki, val){
   if(answered[ki]) return;
   answered[ki+'_pending']=val;
-  render();
-  // ラジオ的に選択状態を更新
+  // render()を呼ばずDOMだけ部分更新（スクロール位置保持）
   document.querySelectorAll('.opt-btn').forEach(b=>{
-    b.classList.remove('selected');
-    if(b.textContent.trim()===val) b.classList.add('selected');
+    const mark = b.querySelector('.opt-mark');
+    if(b.dataset.val === val){
+      b.classList.add('selected');
+      if(mark) mark.textContent='●';
+    } else {
+      b.classList.remove('selected');
+      if(mark) mark.textContent='';
+    }
   });
 }
 
