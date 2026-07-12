@@ -63,6 +63,9 @@ body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans
 .mbtn[data-media="LINE"].on{background:var(--ln);border-color:var(--ln)}
 .mbtn[data-media="YDA"].on{background:var(--yda);border-color:var(--yda)}
 .mbtn[data-media="媒体比較"].on{background:var(--cmp);border-color:var(--cmp)}
+.cbtn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);color:var(--text2);font-family:inherit;transition:all .15s}
+.cbtn:hover{background:var(--bg2)}
+.cbtn.on{background:var(--accent-l);color:var(--accent-d);border-color:var(--accent);font-weight:500}
 
 /* 媒体バッジ */
 .media-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;margin-bottom:4px}
@@ -216,6 +219,18 @@ body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans
     <button class="mbtn" data-media="YDA" onclick="fmedia('YDA',this)"><i class="ti ti-building"></i> YDA</button>
     <button class="mbtn" data-media="媒体比較" onclick="fmedia('媒体比較',this)"><i class="ti ti-git-compare"></i> 媒体比較</button>
   </div>
+  <div class="media-filter" style="margin-top:-6px">
+    <span class="media-filter-lbl">カテゴリで絞り込む：</span>
+    <button class="cbtn on" data-cat="all" onclick="fcat('all',this)">すべて</button>
+    <button class="cbtn" data-cat="広告フォーマット" onclick="fcat('広告フォーマット',this)">広告フォーマット</button>
+    <button class="cbtn" data-cat="シチュエーション対策" onclick="fcat('シチュエーション対策',this)">シチュエーション対策</button>
+    <button class="cbtn" data-cat="基準指標・単価" onclick="fcat('基準指標・単価',this)">基準指標・単価</button>
+    <button class="cbtn" data-cat="やってはいけない設定" onclick="fcat('やってはいけない設定',this)">やってはいけない設定</button>
+    <button class="cbtn" data-cat="するべき設定・判断" onclick="fcat('するべき設定・判断',this)">するべき設定・判断</button>
+    <button class="cbtn" data-cat="ターゲティング" onclick="fcat('ターゲティング',this)">ターゲティング</button>
+    <button class="cbtn" data-cat="特徴・選び方" onclick="fcat('特徴・選び方',this)">特徴・選び方</button>
+    <button class="cbtn" data-cat="媒体選定" onclick="fcat('媒体選定',this)">媒体選定</button>
+  </div>
 
   <!-- 正解済みスキップトグル -->
   <div class="filter-toggle-row">
@@ -296,7 +311,7 @@ body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans
 
 </div>
 <script>
-let Q=[], media='all', order=[], idx=0, answered={}, correct=0, wrong=0;
+let Q=[], media='all', cat='all', order=[], idx=0, answered={}, correct=0, wrong=0;
 let wrongHistory=[], retryMode=false, skipCorrect=true, pendingNavDir=0;
 
 // 媒体アイコンマップ
@@ -346,7 +361,11 @@ function shuffleOpts(opts, correct){
 function buildOrder(overrideIdxes){
   if(overrideIdxes){order=shuffle(overrideIdxes);}
   else{
-    const base=media==='all'?Q.map((_,i)=>i):Q.map((_,i)=>i).filter(i=>Q[i].media===media);
+    const base=Q.map((_,i)=>i).filter(i=>{
+    if(media!=='all' && Q[i].media!==media) return false;
+    if(cat!=='all' && Q[i].cat!==cat) return false;
+    return true;
+  });
     order=shuffle(base);
   }
   idx=0;
@@ -356,6 +375,12 @@ function buildOrder(overrideIdxes){
 function fmedia(m, el){
   media=m; retryMode=false;
   document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  buildOrder(); render();
+}
+function fcat(c, el){
+  cat=c; retryMode=false;
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('on'));
   el.classList.add('on');
   buildOrder(); render();
 }
@@ -640,9 +665,13 @@ function retryAll(keepScore){
   document.getElementById('results-page').style.display='none';
   document.getElementById('quiz-page').style.display='block';
   document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('on'));
   const target=keepScore?media:'all';
   const btn=Array.from(document.querySelectorAll('.mbtn')).find(b=>b.dataset.media===target);
   (btn||document.querySelector('.mbtn')).classList.add('on');
+  const catTarget=keepScore?cat:'all';
+  const cbtn=Array.from(document.querySelectorAll('.cbtn')).find(b=>b.dataset.cat===catTarget);
+  (cbtn||document.querySelector('.cbtn')).classList.add('on');
   skipCorrect=true;
   document.getElementById('correct-toggle').classList.add('on');
   document.getElementById('toggle-lbl').textContent='正解済みの問題をスキップ（ON）';
